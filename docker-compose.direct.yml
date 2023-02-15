@@ -1,0 +1,37 @@
+version: '3.7'
+x-environment: &env
+  PYTHONUNBUFFERED: ${PYTHONUNBUFFERED}
+  REDASH_COOKIE_SECRET: ${REDASH_COOKIE_SECRET}
+  REDASH_DATABASE_URL: ${REDASH_DATABASE_URL}
+  REDASH_HOST: ${REDASH_HOST}
+  REDASH_LOG_LEVEL: ${REDASH_LOG_LEVEL}
+  REDASH_MAIL_DEFAULT_SENDER: ${REDASH_MAIL_DEFAULT_SENDER}
+  REDASH_MAIL_PASSWORD: ${REDASH_MAIL_PASSWORD}
+  REDASH_MAIL_SERVER: ${REDASH_MAIL_SERVER}
+  REDASH_MAIL_USERNAME: ${REDASH_MAIL_USERNAME}
+  REDASH_REDIS_URL: ${REDASH_REDIS_URL}
+services:
+  web:
+    image: redash/redash:8.0.2.b37747
+    ports:
+      - 5001:5000
+    environment:
+      <<: *env
+      REDASH_MAIL_PORT: 25
+      REDASH_WEB_WORKERS: 4
+    command: server
+    links:
+      - redis
+  scheduler:
+    image: redash/redash:8.0.2.b37747
+    command: scheduler
+    environment:
+      <<: *env
+      QUEUES: queries,scheduled_queries,celery
+      WORKERS_COUNT: 2
+    links:
+      - redis
+  redis:
+    image: redis:5.0.6-alpine
+    ports:
+      - 6380:6379
