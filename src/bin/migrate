@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require_relative "../base"
+path = File.expand_path(File.join(__dir__, "../migrations"))
+Dir["#{path}/*.rb"].each(&method(:require))
+
+binding.irb if __FILE__ == $0
