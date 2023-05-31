@@ -1,15 +1,15 @@
 version: '3.7'
 x-environment: &env
   PYTHONUNBUFFERED: ${PYTHONUNBUFFERED}
-  REDASH_COOKIE_SECRET: ${REDASH_COOKIE_SECRET}
-  REDASH_DATABASE_URL: ${REDASH_DATABASE_URL}
+  REDASH_COOKIE_SECRET: MUST_SET
+  REDASH_DATABASE_URL: postgres://redash:redash@postgres:5432/redashdb
   REDASH_HOST: ${REDASH_HOST}
-  REDASH_LOG_LEVEL: ${REDASH_LOG_LEVEL}
+  REDASH_LOG_LEVEL: INFO
   REDASH_MAIL_DEFAULT_SENDER: ${REDASH_MAIL_DEFAULT_SENDER}
   REDASH_MAIL_PASSWORD: ${REDASH_MAIL_PASSWORD}
   REDASH_MAIL_SERVER: ${REDASH_MAIL_SERVER}
   REDASH_MAIL_USERNAME: ${REDASH_MAIL_USERNAME}
-  REDASH_REDIS_URL: ${REDASH_REDIS_URL}
+  REDASH_REDIS_URL: redis://redis:6379/0
 services:
   web:
     image: redash/redash:8.0.2.b37747
@@ -45,3 +45,7 @@ services:
       POSTGRES_DB: 'redashdb'
     ports:
       - "5434:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data: {}
