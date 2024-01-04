@@ -2,3 +2,4 @@
 
 docker-compose build
 docker-compose run --rm web create_db
+cp .env.example .env
